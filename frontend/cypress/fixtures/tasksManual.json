@@ -1,0 +1,57 @@
+{
+  "created": [
+        {
+            "title": "Morning run",
+            "category": "Workout",
+            "description": "Run 5km in the park",
+            "date": "2026-05-01"
+        },
+        {
+            "title": "Guitar practice",
+            "category": "Guitar",
+            "description": "Practice scales and a song",
+            "date": "2026-06-10"
+        },
+        {
+            "title": "Buy groceries",
+            "category": "Nutrition",
+            "description": "Get veggies and snacks",
+            "date": "2026-07-15"
+        },
+        {
+            "title": "Team meeting prep",
+            "category": "Events",
+            "description": "Prepare slides for the meeting",
+            "date": "2026-08-20"
+        }
+    ],
+
+    "edited": [
+        {
+            "title": "Calisthenics training",
+            "category": "Workout",
+            "description": "30 minutes of calisthenics",
+            "date": "2026-05-02"
+        },
+        {
+            "title": "Piano practice",
+            "category": "Music",
+            "description": "Practice new piece",
+            "date": "2026-06-11"
+        },
+        {
+            "title": "Grocery shopping",
+            "category": "Nutrition",
+            "description": "Get fruits and vegetables",
+            "date": "2026-07-16"
+        },
+        {
+            "title": "Client meeting prep",
+            "category": "Events",
+            "description": "Prepare agenda for client meeting",
+            "date": "2026-08-21"
+        }
+    ]
+}
+
+
