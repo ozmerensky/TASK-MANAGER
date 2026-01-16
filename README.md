@@ -1,2 +1,2 @@
 # TASK-MANAGER
-Fullstack "Life Task Manager" application for managing daily tasks with CRUD operations, Cypress + Jest automated tests, CI/CD pipeline and Docker local-based development setup. Includes AI mock feature for generating random tasks.
+Fullstack "Life Task Manager" with CRUD operations, Cypress + Jest tests, CI workflows, local docker setup and an AI mock feature.
