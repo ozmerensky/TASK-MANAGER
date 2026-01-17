@@ -13,7 +13,7 @@ Prerequisites
 
 Quick start (development)
 1. Install dependencies:
-	npm ci
+	npm i
 2. Create a local env file at `backend/.env` (this file is ignored by git). Example values are in `backend/.env.example`.
 	MONGO_URI=mongodb://localhost:27017/tasky_dev
 	PORT=5000

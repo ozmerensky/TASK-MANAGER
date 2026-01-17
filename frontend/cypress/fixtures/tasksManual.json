@@ -24,6 +24,82 @@
             "description": "Prepare slides for the meeting",
             "date": "2026-08-20"
         }
+        ,
+        {
+            "title": "Do 20 push-ups",
+            "category": "Workout",
+            "description": "Quick morning bodyweight exercise",
+            "date": "2026-05-03"
+        },
+        {
+            "title": "Leg day routine",
+            "category": "Workout",
+            "description": "Squats, lunges, calf raises",
+            "date": "2026-05-07"
+        },
+        {
+            "title": "Plank challenge",
+            "category": "Workout",
+            "description": "Hold plank for 2 minutes",
+            "date": "2026-05-09"
+        },
+
+        {
+            "title": "Prepare smoothie",
+            "category": "Nutrition",
+            "description": "Banana + protein powder + almond milk",
+            "date": "2026-07-17"
+        },
+        {
+            "title": "Meal prep for the week",
+            "category": "Nutrition",
+            "description": "Plan and prepare meals in advance",
+            "date": "2026-07-19"
+        },
+        {
+            "title": "Try a new healthy recipe",
+            "category": "Nutrition",
+            "description": "Experiment with quinoa or lentils",
+            "date": "2026-07-21"
+        },
+
+        {
+            "title": "Practice major scales",
+            "category": "Guitar",
+            "description": "Focus on 3 positions across the neck",
+            "date": "2026-06-12"
+        },
+        {
+            "title": "Learn a new song",
+            "category": "Guitar",
+            "description": "Work on chords and timing",
+            "date": "2026-06-14"
+        },
+        {
+            "title": "Finger exercises",
+            "category": "Guitar",
+            "description": "Improve speed and accuracy",
+            "date": "2026-06-16"
+        },
+
+        {
+            "title": "Go to a jam session",
+            "category": "Events",
+            "description": "Play with other musicians",
+            "date": "2026-08-22"
+        },
+        {
+            "title": "Meet a friend for coffee",
+            "category": "Events",
+            "description": "Catch up and chat",
+            "date": "2026-08-24"
+        },
+        {
+            "title": "Attend a local meetup",
+            "category": "Events",
+            "description": "Network and meet new people",
+            "date": "2026-08-26"
+        }
     ],
 
     "edited": [
@@ -34,9 +110,9 @@
             "date": "2026-05-02"
         },
         {
-            "title": "Piano practice",
-            "category": "Music",
-            "description": "Practice new piece",
+            "title": "Shredding session",
+            "category": "Guitar",
+            "description": "Practice advanced solos",
             "date": "2026-06-11"
         },
         {
@@ -50,6 +126,58 @@
             "category": "Events",
             "description": "Prepare agenda for client meeting",
             "date": "2026-08-21"
+        }
+        ,
+        {
+            "title": "Run 3 km",
+            "category": "Workout",
+            "description": "Light jog to improve endurance",
+            "date": "2026-05-04"
+        },
+        {
+            "title": "Plank progression",
+            "category": "Workout",
+            "description": "Increase plank hold time",
+            "date": "2026-05-06"
+        },
+
+        {
+            "title": "Try a new recipe",
+            "category": "Nutrition",
+            "description": "Cook a healthy dinner",
+            "date": "2026-07-18"
+        },
+        {
+            "title": "Plan weekly meals",
+            "category": "Nutrition",
+            "description": "Draft meals for the week",
+            "date": "2026-07-20"
+        },
+
+        {
+            "title": "Practice improvisation",
+            "category": "Guitar",
+            "description": "Jam over backing track in E minor",
+            "date": "2026-06-13"
+        },
+        {
+            "title": "Scale drills",
+            "category": "Guitar",
+            "description": "Speed and accuracy work",
+            "date": "2026-06-15"
+        },
+
+        {
+            "title": "Visit a museum",
+            "category": "Events",
+            "description": "Explore a new exhibition",
+            "date": "2026-08-23"
+        },
+        {
+            "title": "Organize workshop",
+            "category": "Events",
+            "description": "Plan a short local workshop",
+            "date": "2026-08-25"
         }
     ]
 }

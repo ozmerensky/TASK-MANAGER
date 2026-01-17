@@ -7,8 +7,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./",       // <-- שים כאן את השורש של הפרויקט
+    "rootDir": "./src",       
     "types": ["node", "jest"]
   },
-  "include": ["src", "tests"]  // עדיין כלול src + tests
+  "include": ["src"] 
 }

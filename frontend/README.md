@@ -1,27 +1,6 @@
-# React + TypeScript + Vite
+# Life-Task-Manager — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    # Life-Task-Manager — Frontend
-
-    This is the frontend for the Life-Task-Manager application. It is a React + TypeScript app built with Vite and includes Cypress end-to-end tests.
+This is the frontend for the Life-Task-Manager application. It is a React + TypeScript app built with Vite and includes Cypress end-to-end tests.
 
     Quick start (development)
     1. Install dependencies:
@@ -38,11 +17,7 @@ export default defineConfig([
     - Cypress E2E tests live in `frontend/cypress`. Run them:
       npx cypress open   # interactive
       npx cypress run    # headless
-
-    Build
-    - Production build:
-      npm run build
-
+      
     Important files
     - `src/` — React source code and components
     - `cypress/` — fixtures and e2e tests
