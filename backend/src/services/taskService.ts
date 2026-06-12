@@ -30,7 +30,7 @@ export const updateTaskService = async (id: string, data: Partial<TaskInput>) =>
   const task = await Task.findByIdAndUpdate(
     id,
     { ...data },
-    { new: true, runValidators: true }
+    { returnDocument: 'after', runValidators: true }
   );
 
   if (!task) return null;
