@@ -4,18 +4,20 @@ import apiRequests from "../support/funcitons/apiFunctions/apiRequests"
 describe('Standard User Task Flow', () => {
     it('Should create a task by typing into the form and validate DB', () => {
         cy.fixture('tasks').then((tasks) => {
-            tasksFunctions.appEntrance()
-            tasksFunctions.validateMainTitle()
-            apiRequests.interceptCreateTask()
-            tasksFunctions.fillManualTaskForm(tasks.created)
+            tasksFunctions.appEntrance();
+            tasksFunctions.validateMainTitle();
+            apiRequests.interceptCreateTask();
+            tasksFunctions.fillManualTaskForm(tasks.created);
             tasksFunctions.grabFormValues().then((task) => {
-                tasksFunctions.submitCreateForm()
-                apiRequests.waitForTaskCreationAndGetId()
-                tasksFunctions.validateCardValues(task)
-                apiRequests.validateTaskInDB(task)
-            })
-        })
-    })
+                tasksFunctions.submitCreateForm();
+                apiRequests.waitForTaskCreationAndGetId();
+                tasksFunctions.validateCardValues(task);
+                cy.then(() => {
+                    apiRequests.validateTaskInDB(task);
+                });
+            });
+        });
+    });
 
     describe('Actions on existing tasks created from fixtures', () => {
         beforeEach(() => {
@@ -52,7 +54,7 @@ describe('Standard User Task Flow', () => {
             tasksFunctions.validateMainTitle()
             apiRequests.interceptUpdateTask()
             tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.SearchTaskByTitle()
+            tasksFunctions.searchTaskByTitle()
             tasksFunctions.toggleCompletionOnFoundTask();
             apiRequests.waitForTaskEditAndGetId();
             tasksFunctions.validateToggleChangedStatus();
@@ -64,7 +66,7 @@ describe('Standard User Task Flow', () => {
             tasksFunctions.validateMainTitle()
             apiRequests.interceptDeleteTask()
             tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.SearchTaskByTitle()
+            tasksFunctions.searchTaskByTitle()
             tasksFunctions.deleteTask()
             apiRequests.waitForTaskDeleteAndGetId()
             apiRequests.validateDeletedTask()
