@@ -1,26 +1,26 @@
 import { tasksSelectors } from "../mapping/tasksMapping";
 import tasksFunctions from "./tasksFunctions";
+import { TaskData } from "../mapping/constants/task.types";
 
-class aiFunctions{
-    generateAiTask(){
-        cy.get(tasksSelectors.aiButton).click()
+class AiFunctions {
+    
+    generateAiTask(): void {
+        cy.get(tasksSelectors.aiButton).click();
     }
 
-    suggestAiEditTask(){
+    suggestAiEditTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItemEditScreen.suggestAiEditButton).click();
     }
 
-    suggestAiEditAndVerifyChange(previousTask?: { title: string; category: string; description: string; date: string }) {
-        const compareAndAssert = (
-            oldTask: { title: string; category: string; description: string; date: string },
-            attemptsLeft = 3
-        ): Cypress.Chainable<any> => {
+    suggestAiEditAndVerifyChange(previousTask?: TaskData): Cypress.Chainable<TaskData> {
+        const compareAndAssert = (oldTask: TaskData, attemptsLeft = 3): Cypress.Chainable<TaskData> => {
             cy.log(`Attempting AI suggestion, attempts left: ${attemptsLeft}`);
             this.suggestAiEditTask();
 
-            return tasksFunctions.grabTaskValues().then((newTask: any) => {
-                const nt = newTask as { title: string; category: string; description: string; date: string };
-                const somethingChanged =
+            return tasksFunctions.grabTaskValues().then((newTask: unknown) => {
+                const nt = newTask as TaskData;
+                
+                const somethingChanged = 
                     nt.title !== oldTask.title ||
                     nt.category !== oldTask.category ||
                     nt.description !== oldTask.description ||
@@ -32,7 +32,7 @@ class aiFunctions{
                 }
 
                 if (attemptsLeft > 1) {
-                    cy.log('No field changed, retrying AI suggestion...');
+                    cy.log('⚠️ No field changed, retrying AI suggestion...');
                     return compareAndAssert(oldTask, attemptsLeft - 1);
                 }
 
@@ -42,13 +42,13 @@ class aiFunctions{
         };
 
         if (previousTask) {
-            return compareAndAssert(previousTask as any);
+            return compareAndAssert(previousTask);
         }
 
-        return tasksFunctions.grabTaskValues().then((oldTask: any) => {
-            return compareAndAssert(oldTask as { title: string; category: string; description: string; date: string });
+        return tasksFunctions.grabTaskValues().then((oldTask: unknown) => {
+            return compareAndAssert(oldTask as TaskData);
         });
     }
-
 }
-export default new aiFunctions()
+
+export default new AiFunctions();
