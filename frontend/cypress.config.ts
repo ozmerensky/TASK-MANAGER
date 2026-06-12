@@ -6,6 +6,7 @@ export default defineConfig({
     supportFile: 'cypress/support/e2e.ts',
     specPattern: 'cypress/e2e/**.cy.ts',
     defaultCommandTimeout: 15000,
+    watchForFileChanges: false,
     retries: {
       runMode: 3,
       openMode: 1

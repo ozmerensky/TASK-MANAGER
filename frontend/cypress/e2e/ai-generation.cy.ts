@@ -7,15 +7,18 @@ describe('AI-Assisted Task Management', () => {
     it('Should generate AI task and create card with the same data', () => {
         tasksFunctions.appEntrance()
         tasksFunctions.validateMainTitle()
-        aiFunctions.generateAiTask()
         apiRequests.interceptCreateTask()
+        aiFunctions.generateAiTask()
+        tasksFunctions.fillAiTaskForm()
         tasksFunctions.grabFormValues().then((task) => {
             tasksFunctions.submitCreateForm()
             apiRequests.waitForTaskCreationAndGetId()
             tasksFunctions.validateCardValues(task)
-            apiRequests.validateTaskInDB(task)
-        })
-    })
+            cy.then(() => {
+                apiRequests.validateTaskInDB(task)
+            });
+        });
+    });
 
     describe('Actions on existing tasks created from AI suggestions', () => {
         beforeEach(() => {
@@ -47,7 +50,7 @@ describe('AI-Assisted Task Management', () => {
             tasksFunctions.validateMainTitle()
             apiRequests.interceptUpdateTask()
             tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.SearchTaskByTitle()
+            tasksFunctions.searchTaskByTitle()
             tasksFunctions.toggleCompletionOnFoundTask();
             apiRequests.waitForTaskEditAndGetId();
             tasksFunctions.validateToggleChangedStatus();
@@ -59,7 +62,7 @@ describe('AI-Assisted Task Management', () => {
             tasksFunctions.validateMainTitle()
             apiRequests.interceptDeleteTask()
             tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.SearchTaskByTitle()
+            tasksFunctions.searchTaskByTitle()
             tasksFunctions.deleteTask()
             apiRequests.waitForTaskDeleteAndGetId()
             apiRequests.validateDeletedTask()
