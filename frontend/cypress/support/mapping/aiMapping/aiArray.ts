@@ -1,17 +1,15 @@
 import type { TaskInput } from "../constants/task.types";
 
-// --- Function for generating a random date ---
 const getRandomDate = (): string => {
   const today = new Date();
   const future = new Date();
-  future.setDate(today.getDate() + 30); // up to one month ahead
+  future.setDate(today.getDate() + 30);
 
   const randomTime = today.getTime() + Math.random() * (future.getTime() - today.getTime());
   return new Date(randomTime).toISOString().split('T')[0];
 };
 
 export const aiSuggestions: TaskInput[] = [
-  // --- Workout ---
   {
     title: 'Do 20 push-ups',
     category: 'Workout',
@@ -43,7 +41,6 @@ export const aiSuggestions: TaskInput[] = [
     date: getRandomDate(),
   },
 
-  // --- Nutrition ---
   {
     title: 'Prepare smoothie',
     category: 'Nutrition',
@@ -75,7 +72,6 @@ export const aiSuggestions: TaskInput[] = [
     date: getRandomDate(),
   },
 
-  // --- Guitar ---
   {
     title: 'Practice major scales',
     category: 'Guitar',
@@ -107,7 +103,6 @@ export const aiSuggestions: TaskInput[] = [
     date: getRandomDate(),
   },
 
-  // --- Events ---
   {
     title: 'Go to a jam session',
     category: 'Events',

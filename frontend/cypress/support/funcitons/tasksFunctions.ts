@@ -2,18 +2,15 @@ import { tasksSelectors } from "../mapping/tasksMapping";
 import { TaskData } from "../mapping/constants/task.types";
 
 class TasksFunctions {
-    
-    // כניסה לאפליקציה
+
     appEntrance(): void {
         cy.visit('/');
     }
 
-    // ולידציה על כותרת ראשית
     validateMainTitle(): void {
         cy.get(tasksSelectors.mainTitle).should('exist').and('be.visible');
     }
 
-    // וידוא שטופס ה-AI התמלא בצורה אוטומטית (ולא ריק)
     fillAiTaskForm(): void {
         const form = tasksSelectors.form;
         cy.get(form.categorySelector).invoke('val').should('not.be.empty');
@@ -22,7 +19,6 @@ class TasksFunctions {
         cy.get(form.taskDate).invoke('val').should('not.be.empty');
     }
 
-    // משיכת ערכים מהטופס (ללא פירמידות then)
     grabFormValues(): Cypress.Chainable<TaskData> {
         const form = tasksSelectors.form;
         const task: TaskData = { title: '', category: '', description: '', date: '' };
@@ -42,12 +38,10 @@ class TasksFunctions {
         });
     }
 
-    // שליחת הטופס
     submitCreateForm(): void {
         cy.get(tasksSelectors.form.createTaskButton).click();
     }
 
-    // משיכת ערכים ממסך העריכה - הפיכת השרשרת למבנה שטוח וקריא בטירוף
     grabTaskValues(): Cypress.Chainable<TaskData> {
         const screen = tasksSelectors.tasksListContainer.taskItemEditScreen;
         const task: TaskData = { title: '', category: '', description: '', date: '' };
@@ -68,12 +62,10 @@ class TasksFunctions {
         });
     }
 
-    // שמירת שינויי עריכה
     saveEditTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItemEditScreen.saveEditButton).click();
     }
 
-    // ולידציה של כרטיס המשימה ב-UI (קוד נקי, ממוקד ונטול רעש בתוך ה-within)
     validateCardValues(task: TaskData): void {
         const details = tasksSelectors.tasksListContainer.taskDetails;
 
@@ -81,7 +73,6 @@ class TasksFunctions {
             .last()
             .should('be.visible')
             .within(() => {
-                // ולידציית כותרת וסטטוס ביצוע
                 cy.get(details.taskItemTitle)
                     .should('not.be.empty')
                     .invoke('text')
@@ -90,13 +81,11 @@ class TasksFunctions {
                         expect(text.trim()).to.eq(expectedText);
                     });
 
-                // ולידציית תיאור
                 cy.get(details.taskItemDescrition)
                     .should('not.be.empty')
                     .invoke('text')
                     .then((text) => expect(text.trim()).to.eq(task.description));
 
-                // ולידציית תאריך
                 cy.get(details.taskItemDate)
                     .should('not.be.empty')
                     .invoke('text')
@@ -104,12 +93,10 @@ class TasksFunctions {
             });
     }
 
-    // בחירת אינדקס רנדומלי מהמערך
     private getRandomIndexNumber(): number {
         return Math.floor(Math.random() * 4);
     }
 
-    // חיפוש משימה לפי כותרת מתוך האליאס השמור של הטאסק האחרון
     searchTaskByTitle(): void {
         const titleDetails = tasksSelectors.tasksListContainer.taskDetails.taskItemTitle;
         
@@ -119,30 +106,25 @@ class TasksFunctions {
         });
     }
 
-    // הגדרת המשימה האחרונה כאליאס לשימוש בהמשך הטסט
     openEditFormOnLastTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItem).last().as('lastTask');
     }
 
-    // לחיצה על כפתור עריכה
     editTask(): void {
         cy.get('@lastTask').find(tasksSelectors.tasksListContainer.taskItemButtons.editButton).click();
     }
     
-    // שינוי סטטוס ביצוע (Complete/Uncomplete)
     toggleCompletionOnFoundTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItem).last().as('foundTask');
         cy.get('@foundTask').find(tasksSelectors.tasksListContainer.taskItemButtons.toggleButton).click();
     }
 
-    // וידוא שהסטטוס השתנה לוי ירוק
     validateToggleChangedStatus(): void {            
         cy.get('@foundTask').find(tasksSelectors.tasksListContainer.taskDetails.taskItemTitle)
             .invoke('text')
-            .should('contain', '✅'); // שימוש במוצרים המובנים של סייפרס במקום expect ידני
+            .should('contain', '✅');
     }
 
-    // מחיקת משימה
     deleteTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItem)
             .last()
@@ -150,7 +132,6 @@ class TasksFunctions {
             .click();
     }    
 
-    // מילוי ידני של טופס יצירה (בטוח ומבוסס טיפוסים)
     fillManualTaskForm(tasks: TaskData[]): void {
         const form = tasksSelectors.form;
         const idx = this.getRandomIndexNumber();
@@ -161,7 +142,6 @@ class TasksFunctions {
         cy.get(form.taskDate).clear().type(tasks[idx].date);
     }
 
-    // מילוי ידני של טופס עריכה
     fillManualTaskEditForm(tasks: TaskData[]): void {
         const screen = tasksSelectors.tasksListContainer.taskItemEditScreen;
         const idx = this.getRandomIndexNumber();
