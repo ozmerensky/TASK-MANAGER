@@ -1,131 +1,123 @@
+import { TaskData } from "../../mapping/constants/task.types";
 
-class apiRequests{
+class ApiRequests {
+    private currentTaskId: string | null = null;
+    private baseUrl = 'http://localhost:5000/tasks';
 
-    currentTaskId: string | null = null;
+    private getTaskDetails(taskId: string) {
+        return cy.request({
+            method: 'GET',
+            url: `${this.baseUrl}/${taskId}/details`,
+            failOnStatusCode: false
+        });
+    }
 
-    createRandomTaskFromArray(taskArray: { title: string; category: string; description: string; date: string }[]) {
+    createRandomTaskFromArray(taskArray: TaskData[]) {
         const randomTask = taskArray[Math.floor(Math.random() * taskArray.length)];
-        return cy.request('POST', 'http://localhost:5000/tasks/create', randomTask).then((response) => {
-            expect(response.status).to.eq(201);
+        
+        return cy.request('POST', `${this.baseUrl}/create`, randomTask).then((response) => {
+            expect(response.status, 'API Seeding creation status').to.eq(201);
             expect(response.body).to.have.property('_id');
+            
             this.currentTaskId = response.body._id;
-            cy.wrap(response.body._id).as('taskId');
+
+            cy.wrap(this.currentTaskId).as('taskId');
             cy.wrap(randomTask).as('createdTaskData');
         });
     }
 
-    interceptCreateTask(){
-        cy.intercept('POST', '/tasks/create').as('createTask')
+    interceptCreateTask() {
+        cy.intercept('POST', '/tasks/create').as('createTask');
     }
-    waitForTaskCreationAndGetId(){
+
+    interceptUpdateTask() {
+        cy.intercept('PUT', '/tasks/*/update').as('updateTask');
+    }
+
+    interceptDeleteTask() {
+        cy.intercept('DELETE', '/tasks/*/delete').as('deleteTask');
+    }
+
+    waitForTaskCreationAndGetId() {
         cy.wait('@createTask').then((interception) => {
             const status = interception.response?.statusCode;
-            const createdTask = interception.response?.body
-            if (status !== 201){
-                throw new Error(`Task creation failed! status code: ${status}`)
-            }
-            cy.log('Task created succefully with status 201')
-            expect(createdTask).to.have.property('_id')
-            cy.wrap(createdTask._id).as('createdTaskId')
-        })
-    }
-    validateTaskInDB(uiTask: { title: string; category: string; description: string; date: string }) {
-        cy.get('@createdTaskId').then((taskId) => {
-            if (!taskId) throw new Error('No createdTaskId alias found when validating task in DB')
-            cy.request({
-                method: 'GET',
-                url: `http://localhost:5000/tasks/${taskId}/details`,
-                failOnStatusCode: false
-            }).then((response) => {
-                expect(response.status, `GET /tasks/${taskId}/details returned`).to.eq(200);
-
-                const dbTask = response.body;
-
-                expect(dbTask).to.have.property('title', uiTask.title);
-                expect(dbTask).to.have.property('category', uiTask.category);
-                expect(dbTask).to.have.property('description', uiTask.description);
-                expect(dbTask).to.have.property('date', uiTask.date);
-                expect(dbTask).to.have.property('completed', false);
-            });
+            expect(status, 'Task creation network status').to.eq(201);
+            
+            this.currentTaskId = interception.response?.body?._id;
+            expect(this.currentTaskId, 'Intercepted response body should contain _id').to.be.a('string');
         });
     }
 
-    interceptUpdateTask(){
-        cy.intercept('PUT', '/tasks/*/update').as('updateTask')
-    }
-
-    waitForTaskEditAndGetId(){
+    waitForTaskEditAndGetId() {
         cy.wait('@updateTask').then((interception) => {
-            const status = interception.response?.statusCode;
-            const createdTask = interception.response?.body
-            if (status !== 200){
-                throw new Error(`Task edit failed! status code: ${status}`)
-            }
-            cy.log('Task edited succefully with status 200')
-            expect(createdTask).to.have.property('_id')
-            cy.wrap(createdTask._id).as('createdTaskId')
-        })
-    }
-    validateCompletedTask(){
-        cy.get('@createdTaskId').then((taskId) => {
-            if (!taskId) throw new Error('No createdTaskId alias found when validating completed task')
-            cy.request({
-                method: 'GET',
-                url: `http://localhost:5000/tasks/${taskId}/details`,
-                failOnStatusCode: false
-            }).then((response) => {
-                expect(response.status, `GET /tasks/${taskId}/details returned`).to.eq(200);
-                expect(response.body).to.have.property('completed', true);
-            });
+            expect(interception.response?.statusCode, 'Task update network status').to.eq(200);
+            this.currentTaskId = interception.response?.body?._id;
         });
     }
 
-    interceptDeleteTask(){
-        cy.intercept('DELETE', '/tasks/*/delete').as('deleteTask')
-    }
-
-    waitForTaskDeleteAndGetId(){
+    waitForTaskDeleteAndGetId() {
         cy.wait('@deleteTask').then((interception) => {
             const deletedBody = interception.response?.body;
-            if (deletedBody && deletedBody._id) {
-                cy.wrap(deletedBody._id).as('deletedTaskId')
-                return
+            
+            if (deletedBody?._id) {
+                this.currentTaskId = deletedBody._id;
+                return;
             }
 
-            const url = interception.request?.url || ''
-            const m = url.match(/\/tasks\/([^\/]+)\/delete/)
-            if (m && m[1]) {
-                cy.wrap(m[1]).as('deletedTaskId')
-                return
+            const url = interception.request?.url || '';
+            const match = url.match(/\/tasks\/([^\/]+)\/delete/);
+            
+            expect(match && match[1], 'Could not extract deleted task ID from intercept URL/body').to.not.be.null;
+            
+            if (match && match[1]) {
+                this.currentTaskId = match[1];
             }
-
-            throw new Error('Could not determine deleted task id from delete intercept')
-        })
+        });
     }
 
-    validateDeletedTask(){
-        cy.get('@deletedTaskId').then((id) => {
-            if (!id) throw new Error('No deletedTaskId alias found when validating deletion')
-            cy.request({
-                method: 'GET',
-                url: `http://localhost:5000/tasks/${id}/details`,
-                failOnStatusCode: false
-            }).then((response) => {
-                expect(response.status, `Expected task ${id} to be deleted`).to.eq(404)
-            })
-        })
+    validateTaskInDB(expectedTask: TaskData) {
+        if (!this.currentTaskId) throw new Error('No currentTaskId found for validation');
+
+        this.getTaskDetails(this.currentTaskId).then((response) => {
+            expect(response.status, 'DB Validation GET status').to.eq(200);
+            
+            const dbTask = response.body;
+            expect(dbTask).to.have.property('title', expectedTask.title);
+            expect(dbTask).to.have.property('category', expectedTask.category);
+            expect(dbTask).to.have.property('description', expectedTask.description);
+            expect(dbTask).to.have.property('date', expectedTask.date);
+            expect(dbTask).to.have.property('completed', false);
+        });
+    }
+
+    validateCompletedTask() {
+        if (!this.currentTaskId) throw new Error('No currentTaskId found for completion validation');
+
+        this.getTaskDetails(this.currentTaskId).then((response) => {
+            expect(response.status, 'DB Completion Validation GET status').to.eq(200);
+            expect(response.body).to.have.property('completed', true);
+        });
+    }
+
+    validateDeletedTask() {
+        if (!this.currentTaskId) throw new Error('No currentTaskId found for deletion validation');
+
+        this.getTaskDetails(this.currentTaskId).then((response) => {
+            expect(response.status, 'Expected task to be missing from DB (404)').to.eq(404);
+        });
     }
 
     cleanupCurrentTask() {
-        if (this.currentTaskId) {
-            cy.request({
-                method: 'DELETE',
-                url: `http://localhost:5000/tasks/${this.currentTaskId}/delete`,
-                failOnStatusCode: false
-            }).then(() => {
-                this.currentTaskId = null;
-            });
-        }
+        if (!this.currentTaskId) return;
+
+        cy.request({
+            method: 'DELETE',
+            url: `${this.baseUrl}/${this.currentTaskId}/delete`,
+            failOnStatusCode: false
+        }).then(() => {
+            this.currentTaskId = null;
+        });
     }
 }
-export default new apiRequests()
+
+export default new ApiRequests();
