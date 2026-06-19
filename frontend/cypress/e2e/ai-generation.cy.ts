@@ -4,6 +4,10 @@ import apiRequests from "../support/funcitons/apiFunctions/apiRequests"
 import { aiSuggestions } from "../../src/mock/aiSuggestions"
 
 describe('AI-Assisted Task Management', () => {
+    before(() => {
+        tasksFunctions.appEntrance();
+    });
+    
     it('Should generate AI task and create card with the same data', () => {
         tasksFunctions.appEntrance();
         tasksFunctions.validateMainTitle();
@@ -29,42 +33,45 @@ describe('AI-Assisted Task Management', () => {
         });
 
         it('Should edit last task via AI suggestion and validate the update', () => {
-            tasksFunctions.appEntrance()
-            tasksFunctions.validateMainTitle()
-            apiRequests.interceptUpdateTask()
-            tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.editTask()
+            tasksFunctions.appEntrance();
+            tasksFunctions.validateMainTitle();
+            apiRequests.interceptUpdateTask();
+            tasksFunctions.openEditFormOnLastTask();
+            tasksFunctions.editTask();
             tasksFunctions.grabTaskValues().then((previousTask: any) => {
                 aiFunctions.suggestAiEditAndVerifyChange(previousTask as { title: string; category: string; description: string; date: string }).then((newTask: any) => {
-                    tasksFunctions.saveEditTask()
-                    apiRequests.waitForTaskEditAndGetId()
-                    tasksFunctions.validateCardValues(newTask)
-                    apiRequests.validateTaskInDB(newTask)
-                })
-            })
-        })
+                    tasksFunctions.saveEditTask();
+                    apiRequests.waitForTaskEditAndGetId().then(() => {
+                        tasksFunctions.validateCardValues(newTask);
+                        apiRequests.validateTaskInDB(newTask);
+                    });
+                });
+            });
+        });
 
         it('Should search and toggle completion status of last task via AI suggestion and validate the update', () => {
-            tasksFunctions.appEntrance()
-            tasksFunctions.validateMainTitle()
-            apiRequests.interceptUpdateTask()
-            tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.searchTaskByTitle()
+            tasksFunctions.appEntrance();
+            tasksFunctions.validateMainTitle();
+            apiRequests.interceptUpdateTask();
+            tasksFunctions.openEditFormOnLastTask();
+            tasksFunctions.searchTaskByTitle();
             tasksFunctions.toggleCompletionOnFoundTask();
-            apiRequests.waitForTaskEditAndGetId();
-            tasksFunctions.validateToggleChangedStatus();
-            apiRequests.validateCompletedTask()
-        })
+            apiRequests.waitForTaskEditAndGetId().then(() => {
+                tasksFunctions.validateToggleChangedStatus();
+                apiRequests.validateCompletedTask();
+            });
+        });
 
         it('Should find and delete the last task via AI suggestion', () => {
-            tasksFunctions.appEntrance()
-            tasksFunctions.validateMainTitle()
-            apiRequests.interceptDeleteTask()
-            tasksFunctions.openEditFormOnLastTask()
-            tasksFunctions.searchTaskByTitle()
-            tasksFunctions.deleteTask()
-            apiRequests.waitForTaskDeleteAndGetId()
-            apiRequests.validateDeletedTask()
-        })
-    })
-})
+            tasksFunctions.appEntrance();
+            tasksFunctions.validateMainTitle();
+            apiRequests.interceptDeleteTask();
+            tasksFunctions.openEditFormOnLastTask();
+            tasksFunctions.searchTaskByTitle();
+            tasksFunctions.deleteTask();
+            apiRequests.waitForTaskDeleteAndGetId().then(() => {
+                apiRequests.validateDeletedTask();
+            });
+        });
+    });
+});
