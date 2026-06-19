@@ -49,14 +49,15 @@ class ApiRequests {
     }
 
     waitForTaskEditAndGetId() {
-        cy.wait('@updateTask').then((interception) => {
+        return cy.wait('@updateTask').then((interception) => {
             expect(interception.response?.statusCode, 'Task update network status').to.eq(200);
             this.currentTaskId = interception.response?.body?._id;
         });
     }
 
+
     waitForTaskDeleteAndGetId() {
-        cy.wait('@deleteTask').then((interception) => {
+        return cy.wait('@deleteTask').then((interception) => {
             const deletedBody = interception.response?.body;
             
             if (deletedBody?._id) {
