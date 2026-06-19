@@ -39,7 +39,7 @@ class ApiRequests {
     }
 
     waitForTaskCreationAndGetId() {
-        cy.wait('@createTask').then((interception) => {
+        return cy.wait('@createTask').then((interception) => {
             const status = interception.response?.statusCode;
             expect(status, 'Task creation network status').to.eq(201);
             
