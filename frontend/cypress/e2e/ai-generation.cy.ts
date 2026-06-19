@@ -5,17 +5,16 @@ import { aiSuggestions } from "../../src/mock/aiSuggestions"
 
 describe('AI-Assisted Task Management', () => {
     it('Should generate AI task and create card with the same data', () => {
-        tasksFunctions.appEntrance()
-        tasksFunctions.validateMainTitle()
-        apiRequests.interceptCreateTask()
-        aiFunctions.generateAiTask()
-        tasksFunctions.fillAiTaskForm()
+        tasksFunctions.appEntrance();
+        tasksFunctions.validateMainTitle();
+        apiRequests.interceptCreateTask();
+        aiFunctions.generateAiTask();
+        tasksFunctions.fillAiTaskForm();
         tasksFunctions.grabFormValues().then((task) => {
-            tasksFunctions.submitCreateForm()
-            apiRequests.waitForTaskCreationAndGetId()
-            tasksFunctions.validateCardValues(task)
-            cy.then(() => {
-                apiRequests.validateTaskInDB(task)
+            tasksFunctions.submitCreateForm();
+            apiRequests.waitForTaskCreationAndGetId().then(() => {
+                tasksFunctions.validateCardValues(task);
+                apiRequests.validateTaskInDB(task);
             });
         });
     });
