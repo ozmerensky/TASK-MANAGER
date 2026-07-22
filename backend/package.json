@@ -40,6 +40,6 @@
     "js-yaml": "^4.3.0",
     "body-parser": "^2.3.0",
     "brace-expansion": "^2.1.2",
-    "glob": "10.4.5"
+    "minimatch": "^9.0.5"
   }
 }
