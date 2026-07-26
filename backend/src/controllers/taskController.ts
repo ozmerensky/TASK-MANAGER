@@ -28,7 +28,7 @@ export const listTasksController = async (_req: Request, res: Response) => {
 
 export const getTaskDetailsController = async (req: Request, res: Response) => {
   try {
-    const task = await getTaskByIdService(req.params.id);
+    const task = await getTaskByIdService(req.params.id as string);
     if (!task) return res.status(404).json({ error: 'Task not found' });
     res.status(200).json(task);
   } catch (err: any) {
@@ -38,7 +38,7 @@ export const getTaskDetailsController = async (req: Request, res: Response) => {
 
 export const updateTaskController = async (req: Request, res: Response) => {
   try {
-    const updated = await updateTaskService(req.params.id, req.body as Partial<TaskInput>);
+    const updated = await updateTaskService(req.params.id as string, req.body as Partial<TaskInput>);
     if (!updated) return res.status(404).json({ error: 'Task not found' });
     res.status(200).json(updated);
   } catch (err: any) {
@@ -48,7 +48,7 @@ export const updateTaskController = async (req: Request, res: Response) => {
 
 export const deleteTaskController = async (req: Request, res: Response) => {
   try {
-    const deleted = await deleteTaskService(req.params.id);
+    const deleted = await deleteTaskService(req.params.id as string);
     if (!deleted) return res.status(404).json({ error: 'Task not found' });
     res.status(200).json({ message: 'Task deleted' });
   } catch (err: any) {
