@@ -76,29 +76,30 @@ class TasksFunctions {
 
     validateCardValues(task: TaskData): void {
         const details = tasksSelectors.tasksListContainer.taskDetails;
+        const expectedTitle = `${task.title} (${task.category}) - ${task.completed ? '✅' : '❌'}`;
 
         cy.get(tasksSelectors.tasksListContainer.taskItem)
-            .last()
-            .should('be.visible')
-            .within(() => {
-                cy.get(details.taskItemTitle)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => {
-                        const expectedText = `${task.title} (${task.category}) - ${task.completed ? '✅' : '❌'}`;
-                        expect(text.trim()).to.eq(expectedText);
-                    });
-
-                cy.get(details.taskItemDescrition)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => expect(text.trim()).to.eq(task.description));
-
-                cy.get(details.taskItemDate)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => expect(text.trim()).to.eq(task.date));
+        .last()
+        .should('be.visible')
+        .within(() => {
+            cy.get(details.taskItemTitle)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(expectedTitle);
             });
+
+            cy.get(details.taskItemDescrition)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(task.description);
+            });
+
+            cy.get(details.taskItemDate)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(task.date);
+            });
+        });
     }
 
     private getRandomIndexNumber(): number {
