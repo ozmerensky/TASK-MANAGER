@@ -13,10 +13,18 @@ class TasksFunctions {
 
     fillAiTaskForm(): void {
         const form = tasksSelectors.form;
-        cy.get(form.categorySelector).invoke('val').should('not.be.empty');
-        cy.get(form.taskTitle).invoke('val').should('not.be.empty');
-        cy.get(form.taskDescription).invoke('val').should('not.be.empty');
-        cy.get(form.taskDate).invoke('val').should('not.be.empty');
+        cy.get(form.categorySelector).should('be.visible').and(($select) => {
+            expect($select.val()).to.not.be.empty;
+        });
+        cy.get(form.taskTitle).should('be.visible').and(($input) => {
+            expect($input.val()).to.not.be.empty;
+        });
+        cy.get(form.taskDescription).should('be.visible').and(($input) => {
+            expect($input.val()).to.not.be.empty;
+        });
+        cy.get(form.taskDate).should('be.visible').and(($input) => {
+            expect($input.val()).to.not.be.empty;
+        });
     }
 
     grabFormValues(): Cypress.Chainable<TaskData> {
@@ -39,7 +47,7 @@ class TasksFunctions {
     }
 
     submitCreateForm(): void {
-        cy.get(tasksSelectors.form.createTaskButton).click();
+        cy.get(tasksSelectors.form.createTaskButton).should('be.visible').click();
     }
 
     grabTaskValues(): Cypress.Chainable<TaskData> {
@@ -63,34 +71,35 @@ class TasksFunctions {
     }
 
     saveEditTask(): void {
-        cy.get(tasksSelectors.tasksListContainer.taskItemEditScreen.saveEditButton).click();
+        cy.get(tasksSelectors.tasksListContainer.taskItemEditScreen.saveEditButton).should('be.visible').click();
     }
 
     validateCardValues(task: TaskData): void {
         const details = tasksSelectors.tasksListContainer.taskDetails;
+        const expectedTitle = `${task.title} (${task.category}) - ${task.completed ? '✅' : '❌'}`;
 
         cy.get(tasksSelectors.tasksListContainer.taskItem)
-            .last()
-            .should('be.visible')
-            .within(() => {
-                cy.get(details.taskItemTitle)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => {
-                        const expectedText = `${task.title} (${task.category}) - ${task.completed ? '✅' : '❌'}`;
-                        expect(text.trim()).to.eq(expectedText);
-                    });
-
-                cy.get(details.taskItemDescrition)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => expect(text.trim()).to.eq(task.description));
-
-                cy.get(details.taskItemDate)
-                    .should('not.be.empty')
-                    .invoke('text')
-                    .then((text) => expect(text.trim()).to.eq(task.date));
+        .last()
+        .should('be.visible')
+        .within(() => {
+            cy.get(details.taskItemTitle)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(expectedTitle);
             });
+
+            cy.get(details.taskItemDescrition)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(task.description);
+            });
+
+            cy.get(details.taskItemDate)
+            .invoke('text')
+            .should((text) => {
+                expect(text.trim()).to.eq(task.date);
+            });
+        });
     }
 
     private getRandomIndexNumber(): number {
@@ -107,16 +116,20 @@ class TasksFunctions {
     }
 
     openEditFormOnLastTask(): void {
-        cy.get(tasksSelectors.tasksListContainer.taskItem).last().as('lastTask');
+        cy.get(tasksSelectors.tasksListContainer.taskItem)
+        .should('have.length.at.least', 1)
+        .last()
+        .should('be.visible')
+        .as('lastTask');
     }
 
     editTask(): void {
-        cy.get('@lastTask').find(tasksSelectors.tasksListContainer.taskItemButtons.editButton).click();
+        cy.get('@lastTask').find(tasksSelectors.tasksListContainer.taskItemButtons.editButton).should('be.visible').click();
     }
     
     toggleCompletionOnFoundTask(): void {
-        cy.get(tasksSelectors.tasksListContainer.taskItem).last().as('foundTask');
-        cy.get('@foundTask').find(tasksSelectors.tasksListContainer.taskItemButtons.toggleButton).click();
+        cy.get(tasksSelectors.tasksListContainer.taskItem).should('have.length.at.least', 1).last().as('foundTask');
+        cy.get('@foundTask').find(tasksSelectors.tasksListContainer.taskItemButtons.toggleButton).should('be.visible').click();
     }
 
     validateToggleChangedStatus(): void {            
@@ -127,8 +140,10 @@ class TasksFunctions {
 
     deleteTask(): void {
         cy.get(tasksSelectors.tasksListContainer.taskItem)
+            .should('have.length.at.least', 1)
             .last()
             .find(tasksSelectors.tasksListContainer.taskItemButtons.deleteButton)
+            .should('be.visible')
             .click();
     }    
 
@@ -136,20 +151,20 @@ class TasksFunctions {
         const form = tasksSelectors.form;
         const idx = this.getRandomIndexNumber();
         
-        cy.get(form.categorySelector).select(tasks[idx].category);
-        cy.get(form.taskTitle).clear().type(tasks[idx].title);
-        cy.get(form.taskDescription).clear().type(tasks[idx].description);
-        cy.get(form.taskDate).clear().type(tasks[idx].date);
+        cy.get(form.categorySelector).should('be.visible').select(tasks[idx].category);
+        cy.get(form.taskTitle).should('be.visible').clear().type(tasks[idx].title);
+        cy.get(form.taskDescription).should('be.visible').clear().type(tasks[idx].description);
+        cy.get(form.taskDate).should('be.visible').clear().type(tasks[idx].date);
     }
 
     fillManualTaskEditForm(tasks: TaskData[]): void {
         const screen = tasksSelectors.tasksListContainer.taskItemEditScreen;
         const idx = this.getRandomIndexNumber();
         
-        cy.get(screen.taskInputEditCategory).select(tasks[idx].category);
-        cy.get(screen.taskInputEditTitle).clear().type(tasks[idx].title);
-        cy.get(screen.taskInputEditDescription).clear().type(tasks[idx].description);
-        cy.get(screen.taskInputEditDate).clear().type(tasks[idx].date);
+        cy.get(screen.taskInputEditCategory).should('be.visible').select(tasks[idx].category);
+        cy.get(screen.taskInputEditTitle).should('be.visible').clear().type(tasks[idx].title);
+        cy.get(screen.taskInputEditDescription).should('be.visible').clear().type(tasks[idx].description);
+        cy.get(screen.taskInputEditDate).should('be.visible').clear().type(tasks[idx].date);
     }
 }
 

@@ -12,6 +12,7 @@ export default defineConfig({
       openMode: 1
     },
     video: true,
+    allowCypressEnv: false,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

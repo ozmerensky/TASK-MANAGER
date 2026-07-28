@@ -38,14 +38,17 @@ describe('AI-Assisted Task Management', () => {
             apiRequests.interceptUpdateTask();
             tasksFunctions.openEditFormOnLastTask();
             tasksFunctions.editTask();
-            tasksFunctions.grabTaskValues().then((previousTask: any) => {
-                aiFunctions.suggestAiEditAndVerifyChange(previousTask as { title: string; category: string; description: string; date: string }).then((newTask: any) => {
-                    tasksFunctions.saveEditTask();
-                    apiRequests.waitForTaskEditAndGetId().then(() => {
-                        tasksFunctions.validateCardValues(newTask);
-                        apiRequests.validateTaskInDB(newTask);
-                    });
-                });
+            tasksFunctions.grabTaskValues()
+            .then((previousTask) => {
+                return aiFunctions.suggestAiEditAndVerifyChange(previousTask);
+            })
+            .then((newTask) => {
+                tasksFunctions.saveEditTask();
+                return apiRequests.waitForTaskEditAndGetId().then(() => newTask);
+            })
+            .then((newTask) => {
+                tasksFunctions.validateCardValues(newTask);
+                apiRequests.validateTaskInDB(newTask);
             });
         });
 
