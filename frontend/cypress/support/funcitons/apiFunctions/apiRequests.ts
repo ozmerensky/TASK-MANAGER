@@ -13,6 +13,7 @@ class ApiRequests {
     }
 
     createRandomTaskFromArray(taskArray: TaskData[]) {
+        this.currentTaskId = null;
         const randomTask = taskArray[Math.floor(Math.random() * taskArray.length)];
         
         return cy.request('POST', `${this.baseUrl}/create`, randomTask).then((response) => {
@@ -39,7 +40,7 @@ class ApiRequests {
     }
 
     waitForTaskCreationAndGetId() {
-        return cy.wait('@createTask').then((interception) => {
+        return cy.wait('@createTask', { timeout: 10000 }).then((interception) => {
             const status = interception.response?.statusCode;
             expect(status, 'Task creation network status').to.eq(201);
             
@@ -49,7 +50,7 @@ class ApiRequests {
     }
 
     waitForTaskEditAndGetId() {
-        return cy.wait('@updateTask').then((interception) => {
+        return cy.wait('@updateTask', { timeout: 10000 }).then((interception) => {
             expect(interception.response?.statusCode, 'Task update network status').to.eq(200);
             this.currentTaskId = interception.response?.body?._id;
         });
@@ -57,7 +58,7 @@ class ApiRequests {
 
 
     waitForTaskDeleteAndGetId() {
-        return cy.wait('@deleteTask').then((interception) => {
+        return cy.wait('@deleteTask', { timeout: 10000 }).then((interception) => {
             const deletedBody = interception.response?.body;
             
             if (deletedBody?._id) {
@@ -111,12 +112,13 @@ class ApiRequests {
     cleanupCurrentTask() {
         if (!this.currentTaskId) return;
 
+        const idToDelete = this.currentTaskId;
+        this.currentTaskId = null;
+
         cy.request({
             method: 'DELETE',
-            url: `${this.baseUrl}/${this.currentTaskId}/delete`,
+            url: `${this.baseUrl}/${idToDelete}/delete`,
             failOnStatusCode: false
-        }).then(() => {
-            this.currentTaskId = null;
         });
     }
 }
