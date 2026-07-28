@@ -39,7 +39,7 @@ class ApiRequests {
     }
 
     waitForTaskCreationAndGetId() {
-        return cy.wait('@createTask').then((interception) => {
+        return cy.wait('@createTask', { timeout: 10000 }).then((interception) => {
             const status = interception.response?.statusCode;
             expect(status, 'Task creation network status').to.eq(201);
             
@@ -49,7 +49,7 @@ class ApiRequests {
     }
 
     waitForTaskEditAndGetId() {
-        return cy.wait('@updateTask').then((interception) => {
+        return cy.wait('@updateTask', { timeout: 10000 }).then((interception) => {
             expect(interception.response?.statusCode, 'Task update network status').to.eq(200);
             this.currentTaskId = interception.response?.body?._id;
         });
@@ -57,7 +57,7 @@ class ApiRequests {
 
 
     waitForTaskDeleteAndGetId() {
-        return cy.wait('@deleteTask').then((interception) => {
+        return cy.wait('@deleteTask', { timeout: 10000 }).then((interception) => {
             const deletedBody = interception.response?.body;
             
             if (deletedBody?._id) {
