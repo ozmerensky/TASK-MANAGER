@@ -13,6 +13,7 @@ class ApiRequests {
     }
 
     createRandomTaskFromArray(taskArray: TaskData[]) {
+        this.currentTaskId = null;
         const randomTask = taskArray[Math.floor(Math.random() * taskArray.length)];
         
         return cy.request('POST', `${this.baseUrl}/create`, randomTask).then((response) => {
@@ -111,12 +112,13 @@ class ApiRequests {
     cleanupCurrentTask() {
         if (!this.currentTaskId) return;
 
+        const idToDelete = this.currentTaskId;
+        this.currentTaskId = null;
+
         cy.request({
             method: 'DELETE',
-            url: `${this.baseUrl}/${this.currentTaskId}/delete`,
+            url: `${this.baseUrl}/${idToDelete}/delete`,
             failOnStatusCode: false
-        }).then(() => {
-            this.currentTaskId = null;
         });
     }
 }

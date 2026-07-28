@@ -115,7 +115,11 @@ class TasksFunctions {
     }
 
     openEditFormOnLastTask(): void {
-        cy.get(tasksSelectors.tasksListContainer.taskItem).should('have.length.at.least', 1).last().as('lastTask');
+        cy.get(tasksSelectors.tasksListContainer.taskItem)
+        .should('have.length.at.least', 1)
+        .last()
+        .should('be.visible')
+        .as('lastTask');
     }
 
     editTask(): void {
