@@ -19,6 +19,7 @@ describe('AI-Assisted Task Management', () => {
             apiRequests.waitForTaskCreationAndGetId().then(() => {
                 tasksFunctions.validateCardValues(task);
                 apiRequests.validateTaskInDB(task);
+                apiRequests.cleanupCurrentTask();
             });
         });
     });
