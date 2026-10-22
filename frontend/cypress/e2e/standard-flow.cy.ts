@@ -17,6 +17,7 @@ describe('Standard User Task Flow', () => {
                 apiRequests.waitForTaskCreationAndGetId().then(() => {
                     tasksFunctions.validateCardValues(task);
                     apiRequests.validateTaskInDB(task);
+                    apiRequests.cleanupCurrentTask();
                 });
             });
         });
