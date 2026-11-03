@@ -15,6 +15,8 @@
     "react-dom": "^19.1.1"
   },
   "overrides": {
+    "follow-redirects": "^1.16.2",
+    "minimatch": "^11.0.1",
     "qs": "^6.16.1",
     "uuid": "11.1.1",
     "tmp": "^0.2.7",
