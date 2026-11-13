@@ -6,7 +6,7 @@
     "start": "ts-node src/startServer.ts",
     "dev": "nodemon src/startServer.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
