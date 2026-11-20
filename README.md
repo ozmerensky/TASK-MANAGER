@@ -39,8 +39,8 @@ MIT License (see LICENSE in this repository)
 Clone the repository:
 
 ```bash
-git clone https://github.com/ozmerensky/TASK-MANAGER-FS.git
-cd TASK-MANAGER-FS
+git clone https://github.com/ozmerensky/TASK-MANAGER.git
+cd TASK-MANAGER
 ```
 
 ## Backend Setup
@@ -57,7 +57,7 @@ cd TASK-MANAGER-FS
    ```
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/tasky_dev
-   ALLOWED_ORIGINS=http://localhost:3000
+   ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
    API_PREFIX=/tasks
    ```
 
@@ -133,58 +133,44 @@ npx cypress run
 
 ## Running with Docker Compose
 
-You can run the entire app (frontend + backend + MongoDB) locally with Docker Compose.
+You can run the entire app (frontend + backend + MongoDB) locally with Docker Compose:
 
-1. Build all services:
-
+1. **Build and start all services:**
    ```bash
-   docker compose build
+   docker compose up --build
    ```
 
-2. Start all services:
-
-   ```bash
-   docker compose up
-   ```
-
-3. Stop and remove containers:
-
+2. **Stop and remove containers:**
    ```bash
    docker compose down
    ```
 
-4. View logs:
-
+3. **View logs:**
    ```bash
    docker compose logs -f
    ```
 
-5. Show running containers:
-
+4. **Show running containers:**
    ```bash
    docker compose ps
    ```
 
 ## Environment & CI
 
-Keep secrets in .env files, do not commit them
-
-CI pipelines run tests automatically and ensure code quality
-
-Backend tests use mongodb-memory-server for CI-friendly integration
-
-E2E tests use MongoDB 6 container
+- Keep secrets in `.env` files — do not commit them to version control.
+- CI pipelines run tests automatically to ensure code quality.
+- Backend tests use `mongodb-memory-server` for fast, CI-friendly integration testing.
+- E2E tests run against a dedicated MongoDB 6 container.
 
 ## AI Workflow Detail:
   Utilized AI to brainstorm the communication contract between React and Express, ensuring type safety across the stack. I leveraged AI-driven insights to generate comprehensive Cypress test scenarios and optimize Docker configurations, ensuring environment parity and a streamlined development-to-CI pipeline.
 
+## Port Mapping & Environment Isolation
 
-## Notes
+| Service | Local Development (`npm run dev`) | Docker Compose |
+| :--- | :--- | :--- |
+| **Frontend** | `5173` | `3000` |
+| **Backend** | `5000` | `5000` |
+| **MongoDB** | `27017` | `27017` |
 
-Ports mapping:
-
-- Backend: 5000
-- Frontend: 3000
-- MongoDB: 27017
-
-Do not run local development servers (npm run dev / npm start) while Docker Compose is running to avoid port conflicts.
+> **Note:** Do not run local development servers (`npm run dev`) while Docker Compose is running, as they share the Backend (`5000`) and MongoDB (`27017`) ports, which will cause port conflicts.
